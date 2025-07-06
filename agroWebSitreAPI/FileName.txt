@@ -1,0 +1,4 @@
+no gerenciador de pacotes
+Add-Migration nome da migration
+Remove-Migration
+Update-Database    -> Sobe as Migrations para o banco

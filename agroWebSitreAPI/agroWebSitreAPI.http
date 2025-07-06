@@ -1,0 +1,6 @@
+@agroWebSitreAPI_HostAddress = http://localhost:5188
+
+GET {{agroWebSitreAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
