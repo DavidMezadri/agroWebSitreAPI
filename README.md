@@ -59,7 +59,7 @@ O sistema utiliza **JWT** para autenticação de usuários. O token é gerado no
 2. Instale os pacotes NuGet:
    ```bash
     dotnet restore
-3. Configure a string de conexão no appsettings.json
+3. Configure a string de conexão no ConnectionContext.cs
 4. Aplique as migrations:
    ```bash
     dotnet ef database update
