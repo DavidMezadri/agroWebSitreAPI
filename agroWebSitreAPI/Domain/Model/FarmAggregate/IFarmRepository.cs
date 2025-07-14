@@ -13,6 +13,6 @@ namespace agroWebSitreAPI.Domain.Model.FarmAggregate
 
         FarmDTO Update(FarmDTO farm);
 
-        FarmDTO DeleteFarm(FarmDTO farm);
+        FarmDTO DeleteFarm(int id, int idFarm);
     }
 }

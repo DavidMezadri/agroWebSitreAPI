@@ -18,8 +18,6 @@ namespace agroWebSitreAPI.Controllers
         [Route("api/v1/auth")]
         public IActionResult Auth([FromBody] LoginDTO login) 
         {
-            Console.WriteLine($"Email: {login?.Email}, Password: {login?.Password}");
-
             var user = _userRepository.FindByEmail(login.Email, login.Password);
             if (user == null)
             {

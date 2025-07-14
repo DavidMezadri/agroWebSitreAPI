@@ -16,16 +16,18 @@ namespace agroWebSitreAPI.Domain.Model.FarmAggregate
         public DateTime date { get; set; }
         public float area { get; set; }
         public string localize { get; set; }
+        public string farmer { get; set; }
 
 
 
-        public Farm(int id_farm, string nameFarm, DateTime date, float area, string localize)
+        public Farm(int id_farm, string nameFarm, string farmer, DateTime date, float area, string localize)
         {
             this.id_farm = id_farm;
             this.nameFarm = nameFarm;
             this.date = date;
             this.area = area;
             this.localize = localize;
+            this.farmer = farmer;
         }
         public Farm() { }
     }

@@ -34,7 +34,7 @@ namespace agroWebSitreAPI.Controllers
                 return BadRequest("O ID do usuário no token é inválido.");
             }
             //Tratamentos dos dados
-            if (string.IsNullOrEmpty(farmView.NameFarm))
+            if (string.IsNullOrEmpty(farmView.Name))
             {
                 return BadRequest("O Nome da Fazenda é inválido.");
             }
@@ -55,7 +55,7 @@ namespace agroWebSitreAPI.Controllers
             {
                 return BadRequest("A localização da Fazenda é inválida.");
             }
-            var farm = new Farm(userId, farmView.NameFarm, parsedDate, area, farmView.Localize);
+            var farm = new Farm(userId, farmView.Name, farmView.Farmer, parsedDate, area, farmView.Localize);
             _farmRepository.Add(farm);
             return Ok("Fazenda cadastrada!");
         }
@@ -77,11 +77,43 @@ namespace agroWebSitreAPI.Controllers
             }
 
             var farms = _farmRepository.GetAllFarms(userId);
-            return Ok(farms);
+
+            var result = new
+            {
+                dataTableHeader = new
+                {
+                    title = "Fazedas Cadastradas",
+                    headLabels = new[]
+                    {
+                        "ID",
+                        "Nome da Fazenda",
+                        "Propietario",
+                        "Data",
+                        "Área",
+                        "Localização"
+                    }
+                },
+                dataLabelsInfo = farms.Select(farm => new
+                {
+                    labelInfo = new
+                    {
+                        id = farm.Id.ToString(),
+                        name = farm.Name,
+                        farmer = farm.Farmer,
+                        date = farm.Date.ToString("yyyy-MM-dd"),
+                        area = farm.Area.ToString(),
+                        localize = farm.Localize
+                    },
+                    dataInfoAnalysis = new List<object>()
+                })
+            };
+
+            return Ok(result);
         }
+
         [Authorize]
         [HttpPut]
-        public IActionResult EditFarm(FarmViewModel farmView)
+        public IActionResult EditFarm([FromBody] FarmViewModel farmView)
         {
             //Pegando idUsuario do token
             var userIdClaim = User.FindFirst("userId")?.Value;
@@ -97,7 +129,7 @@ namespace agroWebSitreAPI.Controllers
 
             var selectFarm = new FarmDTO();
             // Atualiza apenas os campos preenchidos
-            if (string.IsNullOrEmpty(farmView.NameFarm))
+            if (string.IsNullOrEmpty(farmView.Name))
             {
                 return BadRequest("O Nome da Fazenda é inválido.");
             }
@@ -123,7 +155,8 @@ namespace agroWebSitreAPI.Controllers
 
             selectFarm.Id = farmView.Id;
             selectFarm.IdFarm = userId;
-            selectFarm.NameFarm = farmView.NameFarm;
+            selectFarm.Name = farmView.Name;
+            selectFarm.Farmer = farmView.Farmer;
             selectFarm.Date = parsedDate;
             selectFarm.Area = area;
             selectFarm.Localize = farmView.Localize;
@@ -140,8 +173,9 @@ namespace agroWebSitreAPI.Controllers
 
         [Authorize]
         [HttpDelete]
-        public IActionResult DeleteFarm(FarmViewModel farmView)
+        public IActionResult DeleteFarm([FromHeader]int id)
         {
+            Console.WriteLine(id);
             //Pegando idUsuario do token
             var userIdClaim = User.FindFirst("userId")?.Value;
             if (string.IsNullOrEmpty(userIdClaim))
@@ -154,11 +188,8 @@ namespace agroWebSitreAPI.Controllers
                 return BadRequest("O ID do usuário no token é inválido.");
             }
 
-            var selectFarm = new FarmDTO();
-            selectFarm.IdFarm = userId;
-            selectFarm.Id = farmView.Id;
 
-            if (_farmRepository.DeleteFarm(selectFarm) == null)
+            if (_farmRepository.DeleteFarm(id, userId) == null)
             {
                 return BadRequest("Fazenda não encotrada.");
             }
