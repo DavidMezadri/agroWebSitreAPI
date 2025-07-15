@@ -156,7 +156,7 @@ namespace agroWebSitreAPI.Controllers
                     new { element = "CTC", current = analyse.currentCtc, missing = analyse.missingCtc},
                     new { element = "V%", current = analyse.currentV, missing = analyse.missingV},
                     new { element = "H+Al", current = analyse.currentHal, missing = analyse.missingHal}
-                }}).ToList();
+                } }).ToList();
 
             var result = new
             {
@@ -202,7 +202,7 @@ namespace agroWebSitreAPI.Controllers
 
         [Authorize]
         [HttpPut]
-        public IActionResult Put(AnalysisViewModelPut analysisView)
+        public IActionResult Put([FromBody]AnalysisViewModelPut[] analysisViews)
         {
             //Pegando idUsuario do token
             var userIdClaim = User.FindFirst("userId")?.Value;
@@ -216,58 +216,64 @@ namespace agroWebSitreAPI.Controllers
                 return BadRequest("O ID do usuário no token é inválido.");
             }
 
-            if (!DateTime.TryParse(analysisView.Data, out var parsedDate))
+            foreach (var analysisView in analysisViews)
             {
-                return BadRequest("A data de criação da Fazenda é inválida.");
+                if (!DateTime.TryParse(analysisView.Data, out _))
+                {
+                    return BadRequest("A data de criação da Fazenda é inválida.");
+                }
             }
 
-            parsedDate = DateTime.SpecifyKind(parsedDate, DateTimeKind.Utc);
 
-
-
-            var analysisDTO = new AnalysisDTO()
+            var analysisDTOs = analysisViews.Select(analysisView =>
             {
-                id = int.Parse(analysisView.ID),
-                date = parsedDate,
-                name = analysisView.Nome,
-                currentPh = float.Parse(analysisView.pH),
-                currentMo = float.Parse(analysisView.MO),
-                currentCo = float.Parse(analysisView.CO),
-                currentP = float.Parse(analysisView.P),
-                currentK = float.Parse(analysisView.K),
-                currentCa = float.Parse(analysisView.Ca),
-                currentMg = float.Parse(analysisView.Mg),
-                currentS = float.Parse(analysisView.S),
-                currentB = float.Parse(analysisView.B),
-                currentZn = float.Parse(analysisView.Zn),
-                currentCu = float.Parse(analysisView.Cu),
-                currentMn = float.Parse(analysisView.Mn),
-                currentFe = float.Parse(analysisView.Fe),
-                currentAl = float.Parse(analysisView.Al),
-                currentCtc = float.Parse(analysisView.CTC),
-                currentV = float.Parse(analysisView.V_),
-                currentHal = float.Parse(analysisView.H_Al),
+                DateTime.TryParse(analysisView.Data, out var parsedDate);
+                parsedDate = DateTime.SpecifyKind(parsedDate, DateTimeKind.Utc);
 
-                missingPh = float.Parse(analysisView.pH) + 5.0f,
-                missingMo = float.Parse(analysisView.MO) + 5.0f,
-                missingCo = float.Parse(analysisView.CO) + 5.0f,
-                missingP = float.Parse(analysisView.P) + 5.0f,
-                missingK = float.Parse(analysisView.K) + 5.0f,
-                missingCa = float.Parse(analysisView.Ca) + 5.0f,
-                missingMg = float.Parse(analysisView.Mg) + 5.0f,
-                missingS = float.Parse(analysisView.S) + 5.0f,
-                missingB = float.Parse(analysisView.B) + 5.0f,
-                missingZn = float.Parse(analysisView.Zn) + 5.0f,
-                missingCu = float.Parse(analysisView.Cu) + 5.0f,
-                missingMn = float.Parse(analysisView.Mn) + 5.0f,
-                missingFe = float.Parse(analysisView.Fe) + 5.0f,
-                missingAl = float.Parse(analysisView.Al) + 5.0f,
-                missingCtc = float.Parse(analysisView.CTC) + 5.0f,
-                missingV = float.Parse(analysisView.V_) + 5.0f,
-                missingHal = float.Parse(analysisView.H_Al) + 5.0f,
-            }; //alterei agora
+                return new AnalysisDTO()
+                {
+                    id = int.Parse(analysisView.ID),
+                    date = parsedDate,
+                    name = analysisView.Nome,
+                    currentPh = float.Parse(analysisView.pH),
+                    currentMo = float.Parse(analysisView.MO),
+                    currentCo = float.Parse(analysisView.CO),
+                    currentP = float.Parse(analysisView.P),
+                    currentK = float.Parse(analysisView.K),
+                    currentCa = float.Parse(analysisView.Ca),
+                    currentMg = float.Parse(analysisView.Mg),
+                    currentS = float.Parse(analysisView.S),
+                    currentB = float.Parse(analysisView.B),
+                    currentZn = float.Parse(analysisView.Zn),
+                    currentCu = float.Parse(analysisView.Cu),
+                    currentMn = float.Parse(analysisView.Mn),
+                    currentFe = float.Parse(analysisView.Fe),
+                    currentAl = float.Parse(analysisView.Al),
+                    currentCtc = float.Parse(analysisView.CTC),
+                    currentV = float.Parse(analysisView.V_),
+                    currentHal = float.Parse(analysisView.H_Al),
 
-            _analysisRepository.Update(analysisDTO);
+                    missingPh = float.Parse(analysisView.pH) + 5.0f,
+                    missingMo = float.Parse(analysisView.MO) + 5.0f,
+                    missingCo = float.Parse(analysisView.CO) + 5.0f,
+                    missingP = float.Parse(analysisView.P) + 5.0f,
+                    missingK = float.Parse(analysisView.K) + 5.0f,
+                    missingCa = float.Parse(analysisView.Ca) + 5.0f,
+                    missingMg = float.Parse(analysisView.Mg) + 5.0f,
+                    missingS = float.Parse(analysisView.S) + 5.0f,
+                    missingB = float.Parse(analysisView.B) + 5.0f,
+                    missingZn = float.Parse(analysisView.Zn) + 5.0f,
+                    missingCu = float.Parse(analysisView.Cu) + 5.0f,
+                    missingMn = float.Parse(analysisView.Mn) + 5.0f,
+                    missingFe = float.Parse(analysisView.Fe) + 5.0f,
+                    missingAl = float.Parse(analysisView.Al) + 5.0f,
+                    missingCtc = float.Parse(analysisView.CTC) + 5.0f,
+                    missingV = float.Parse(analysisView.V_) + 5.0f,
+                    missingHal = float.Parse(analysisView.H_Al) + 5.0f,
+                };
+            }).ToList();
+
+            _analysisRepository.Update(analysisDTOs);
 
             return Ok("Usuário editado com seucesso!");
         }

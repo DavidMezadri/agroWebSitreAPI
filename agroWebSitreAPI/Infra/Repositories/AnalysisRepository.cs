@@ -175,62 +175,67 @@ namespace agroWebSitreAPI.Infra.Repositories
             return null;
         }
 
-        public AnalysisDTO Update(AnalysisDTO analysisDTO)
+        public IEnumerable<AnalysisDTO> Update(IEnumerable<AnalysisDTO> analysisDTOs)
         {
-            var analysis = _context.Analysis.FirstOrDefault(a => a.id == analysisDTO.id && a.idFarm == analysisDTO.idFarm);
-            if(analysis == null)
+            foreach (var dto in analysisDTOs)
             {
-                return null;
+                var analysis = _context.Analysis.FirstOrDefault(a => a.id == dto.id && a.idFarm == dto.idFarm);
+
+                if (analysis == null)
+                {
+                    analysis = new Analysis
+                    {
+                        id = dto.id,
+                        idFarm = dto.idFarm
+                    };
+                    _context.Analysis.Add(analysis);
+                }
+
+                // --- Dados de Identificação ---
+                analysis.name = dto.name;
+                analysis.date = dto.date;
+
+                // --- Teores Atuais da Análise de Solo ---
+                analysis.currentPh = dto.currentPh;
+                analysis.currentMo = dto.currentMo;
+                analysis.currentP = dto.currentP;
+                analysis.currentK = dto.currentK;
+                analysis.currentCa = dto.currentCa;
+                analysis.currentMg = dto.currentMg;
+                analysis.currentS = dto.currentS;
+                analysis.currentB = dto.currentB;
+                analysis.currentZn = dto.currentZn;
+                analysis.currentCu = dto.currentCu;
+                analysis.currentMn = dto.currentMn;
+                analysis.currentFe = dto.currentFe;
+                analysis.currentCo = dto.currentCo;
+                analysis.currentAl = dto.currentAl;
+                analysis.currentCtc = dto.currentCtc;
+                analysis.currentV = dto.currentV;
+                analysis.currentHal = dto.currentHal;
+
+                // --- Valores Ideais ou Faltantes para Correção ---
+                analysis.missingPh = dto.missingPh;
+                analysis.missingMo = dto.missingMo;
+                analysis.missingP = dto.missingP;
+                analysis.missingK = dto.missingK;
+                analysis.missingCa = dto.missingCa;
+                analysis.missingMg = dto.missingMg;
+                analysis.missingS = dto.missingS;
+                analysis.missingB = dto.missingB;
+                analysis.missingZn = dto.missingZn;
+                analysis.missingCu = dto.missingCu;
+                analysis.missingMn = dto.missingMn;
+                analysis.missingFe = dto.missingFe;
+                analysis.missingCo = dto.missingCo;
+                analysis.missingAl = dto.missingAl;
+                analysis.missingCtc = dto.missingCtc;
+                analysis.missingV = dto.missingV;
+                analysis.missingHal = dto.missingHal;
             }
 
-            // --- Dados de Identificação ---
-            analysis.name = analysisDTO.name;
-            analysis.date = analysisDTO.date;
-
-            // --- Teores Atuais da Análise de Solo ---
-            analysis.currentPh = analysisDTO.currentPh;
-            analysis.currentMo = analysisDTO.currentMo; // Matéria Orgânica
-            analysis.currentP = analysisDTO.currentP;   // Fósforo
-            analysis.currentK = analysisDTO.currentK;   // Potássio
-            analysis.currentCa = analysisDTO.currentCa; // Cálcio
-            analysis.currentMg = analysisDTO.currentMg; // Magnésio
-            analysis.currentS = analysisDTO.currentS;   // Enxofre
-            analysis.currentB = analysisDTO.currentB;   // Boro
-            analysis.currentZn = analysisDTO.currentZn; // Zinco
-            analysis.currentCu = analysisDTO.currentCu; // Cobre
-            analysis.currentMn = analysisDTO.currentMn; // Manganês
-            analysis.currentFe = analysisDTO.currentFe; // Ferro
-            analysis.currentCo = analysisDTO.currentCo;
-            analysis.currentAl = analysisDTO.currentAl; // Alumínio
-            analysis.currentCtc = analysisDTO.currentCtc; // CTC Efetiva
-            analysis.currentV = analysisDTO.currentV;   // V% (Saturação por Bases)
-            analysis.currentHal = analysisDTO.currentHal; // H + Al (Acidez Potencial)
-
-            // --- Valores Ideais ou Faltantes para Correção ---
-            analysis.missingPh = analysisDTO.missingPh;
-            analysis.missingMo = analysisDTO.missingMo;
-            analysis.missingP = analysisDTO.missingP;
-            analysis.missingK = analysisDTO.missingK;
-            analysis.missingCa = analysisDTO.missingCa;
-            analysis.missingMg = analysisDTO.missingMg;
-            analysis.missingS = analysisDTO.missingS;
-            analysis.missingB = analysisDTO.missingB;
-            analysis.missingZn = analysisDTO.missingZn;
-            analysis.missingCu = analysisDTO.missingCu;
-            analysis.missingMn = analysisDTO.missingMn;
-            analysis.missingFe = analysisDTO.missingFe;
-            analysis.missingCo = analysisDTO.missingCo;
-            analysis.missingAl = analysisDTO.missingAl;
-            analysis.missingCtc = analysisDTO.missingCtc;
-            analysis.missingV = analysisDTO.missingV;
-            analysis.missingHal = analysisDTO.missingHal;
-
-           
-
-            _context.Analysis.Update(analysis);
             _context.SaveChanges();
-
-            return analysisDTO;
+            return analysisDTOs;
         }
     }
 }

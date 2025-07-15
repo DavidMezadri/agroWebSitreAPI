@@ -10,7 +10,7 @@ namespace agroWebSitreAPI.Domain.Model.Analysis
         List<AnalysisDTO> GetAllAnalysis(int idFarm);
 
 
-        AnalysisDTO Update(AnalysisDTO analysisDTO);
+        IEnumerable<AnalysisDTO> Update(IEnumerable<AnalysisDTO> analysisDTO);
 
         AnalysisDTO DeleteAnalysis(int idAnalysis, int idFarm) ;
     }
