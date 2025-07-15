@@ -23,22 +23,6 @@
         public string currentCtc { get; set; }
         public string currentV { get; set; }
         public string currentHal { get; set; }
-        public string missingPh { get; set; }
-        public string missingMo { get; set; }
-        public string missingCo { get; set; }
-        public string missingP { get; set; }
-        public string missingK { get; set; }
-        public string missingCa { get; set; }
-        public string missingMg { get; set; }
-        public string missingS { get; set; }
-        public string missingB { get; set; }
-        public string missingZn { get; set; }
-        public string missingCu { get; set; }
-        public string missingMn { get; set; }
-        public string missingFe { get; set; }
-        public string missingAl { get; set; }
-        public string missingCtc { get; set; }
-        public string missingV { get; set; }
-        public string missingHal { get; set; }
+
     }
 }
